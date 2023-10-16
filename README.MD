@@ -55,7 +55,7 @@ These parameters are then used along with those obtained from additional calibra
 The sequence of the experiments required is typically composed of at least fifteen different experiments.
 Each of these experiments involves the synthesis of specific pulse sequences and measurements aimed at optimizing one or more of the parameters that describe the system.
 %
-For example, the Ramsey experiment, which allows the identification of the value of T_2 (the decay constant describing the loss of coherence of the qubit system), is performed by synthesizing two consecutive pulses that take the qubit from a defined state (0-1) to a superposition and vice versa, using an operation described by \frac{1}{\sqrt{2}}\begin{pmatrix}1 & 1 \\ i & i \end{pmatrix}\).
+For example, the Ramsey experiment, which allows the identification of the value of T_2 (the decay constant describing the loss of coherence of the qubit system), is performed by synthesizing two consecutive pulses that take the qubit from a defined state (0-1) to a superposition and vice versa, using an operation described by \(\frac{1}{\sqrt{2}}\begin{pmatrix}1 & 1 \\ i & i \end{pmatrix}\).
 The two pulses are separated by a variable delay, and a relative phase of \pi/2 is added to the second pulse.
 %
 This process enables the examine, as a function of the delay between the two pulses, the typical dephasing decay that occurs following the first pulse.
