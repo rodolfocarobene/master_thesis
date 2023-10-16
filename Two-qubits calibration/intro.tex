@@ -1,0 +1,53 @@
+
+After the last chapter, and with some more work and fine tuning, the experimenter should be able to reach a proper single qubit calibration.
+However, to execute "useful" circuits, the capability of entangling multiple qubits and executing gates between them is critical.
+Indeed, the real difference between classical and quantum computations \textit{is} the entanglement effect: from a probability point of view, all the results that we obtained are still compatible with classical theories (or hidden-variables theories) and we didn't yet encounter any real proof of quantum probability.
+
+In this section, we will learn the principles of two-qubits gates and how to perform a basic calibration of those.
+%The calibration presented here will be used in XXX to perform a Bell experiment and proof that this is indeed a quantum world.
+
+There are two main two-qubits gates that can be implemented: CZ and iSWAP.
+The calibration is more or less the same and the complexity to achieve them does not differ. 
+I will focus on the iSWAP gate since I found better literature about it, but everything can be easily transposed for the CZ~\cite{Krantz2016, DiCarlo2009, McKay2017}.
+
+
+The interaction of two qubits is done via a coupling capacity that produces an interaction term of:
+\begin{equation}
+    H_{qq} = g \sigma_{y1} \otimes \sigma_{y2}
+\end{equation}
+This Hamiltonian can be decomposed in $\sigma^\pm$ (ladder operators) and, dropping the fast rotating terms, we can arrive at:
+\begin{equation}
+    H_{qq} = g (e^{\delta \omega_{12}t}\sigma^+ \sigma^- + e^{-\delta \omega_{12}t}\sigma^- \sigma^+)
+\end{equation}
+where we have $\delta \omega_{12}= \omega_{q1} - \omega_{q2}$.
+
+The last equation is not particularly clear and easy to understand, but this all changes when the two qubits share the same frequency:
+\begin{equation}
+    H_{qq}=g(\sigma^+\sigma^- + \sigma^-\sigma^+) = \frac{g}{2}(\sigma_x \sigma_x + \sigma_y \sigma_y)
+\end{equation}
+And this equation, when applied as a time evolution, produces an iSWAP gate.
+
+The iSWAP gate can be written in the canonical basis as:
+\begin{equation}
+    iSWAP = 
+    \begin{pmatrix}
+        1 & 0 & 0 & 0 \\
+        0 & 0 & -i & 0 \\
+        0 & -i & 0 & 0 \\
+        0 & 0 & 0 & 1
+    \end{pmatrix}
+\end{equation}
+while the time evolution of $H_{qq}$ is:
+\begin{equation}\label{eq:iswap_oscillations}
+    U_{qq}(t) = e^{-i\frac{g}{2}(\sigma_x \sigma_x + \sigma_y \sigma_y)t}= 
+    \begin{pmatrix}
+        1 & 0 & 0 & 0 \\
+        0 & \cos(gt) & -i\sin(gt) & 0 \\
+        0 & -i\sin(gt) & \cos(gt) & 0 \\
+        0 & 0 & 0 & 1
+    \end{pmatrix}
+\end{equation}
+with exact equality for $T=\frac{\pi}{2g}$.
+
+So, what we have just demonstrated can be summarized in saying that the iSWAP can be implemented simply by activating the two-qubits interaction for a fixed time.
+

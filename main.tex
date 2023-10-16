@@ -1,0 +1,77 @@
+\documentclass[11pt,a4paper, twoside]{book}
+\input{stuff/header}
+
+\begin{document}
+\input{stuff/front_page}
+\input{stuff/preamble}
+
+\mainmatter
+\chapter{Theory}
+
+\input{Theory/main}
+\input{Theory/dark_matter}
+
+
+\newpage
+\section{Qubits}
+\input{Theory/josephson_junctions}
+\input{Theory/transmon}
+\input{Theory/couplings}
+\input{Theory/control_readout}
+%\input{Theory/signals}
+
+\chapter{Experimental setup and software}
+\input{Setup-software/experimental_setup}
+%\input{Setup-software/fpga_rfsoc}
+\input{Setup-software/software}
+
+\chapter{Single qubit characterization and calibration}
+
+\input{characterization/main}\label{chap:char}
+
+\newpage
+\routine{Time of flight measurement}{time_of_flight}
+\routine{Resonator spectroscopy (bare frequency)}{resonator_spectroscopy}
+\routine{Resonator punchout}{punchout}
+\routine{Flux resonator spectroscopy}{resonator_spectroscopy_flux}
+\routine{Qubit spectroscopy}{qubit_spectroscopy}
+\routine{Flux Qubit Spectroscopy}{qubit_spectroscopy_flux}
+\routine{Rabi oscillation}{rabi_oscillations}
+\routine{Ramsey experiment}{ramsey}
+\routine{Flipping}{flipping}
+\routine{T1 measurement}{t1_measurement}
+\routine{Hahn’s spin echo (T2)}{t2_spin_echo}
+\routine{Single-shot classification}{single_shot_classification}
+\routine{Readout optimization}{readout_optimization}
+\routine{AllXY}{allxy}
+\routine{DRAG tuning (pulse shape)}{pulse_shape}
+\routine{Randomize benchmarking}{rb}
+
+\newpage
+
+\routine{Other possible calibration experiments}{other_possible}
+
+
+
+
+% two qubit gates things
+\chapter{Two-qubits characterization and calibration}
+\input{Two-qubits calibration/intro}
+\input{Two-qubits calibration/avoided_crossing}
+\input{Two-qubits calibration/chevron}
+\input{Two-qubits calibration/cryoscope}
+\input{Two-qubits calibration/virtual_correction}
+
+
+\input{Other sections/applications}
+
+\input{Other sections/conclusions}
+
+
+\printbibliography[heading=bibintoc]
+
+%\appendix
+%\chapter{Defining and propagating uncertainties}
+%\chapter{TWPA calibration}
+
+\end{document}

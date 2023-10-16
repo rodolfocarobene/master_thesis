@@ -1,0 +1,68 @@
+
+\frontmatter
+\input{stuff/abstract}
+
+\tableofcontents
+
+\listoffigures \addcontentsline{toc}{chapter}{List of figures}
+\begingroup
+\let\clearpage\relax
+\listoftables \addcontentsline{toc}{chapter}{List of tables}
+\endgroup
+
+%\chapter{Introduction}
+%
+%Quantum technologies are one of the newest and most thriving topic of research in modern physics.
+%Although it is not clear how much they will change in the future and in which fields they will be more impactful, they are already providing interesting theoretical results, promising to achieve a \textit{computational capacity} higher than any possible supercomputer.
+%
+%Quantum technologies are being studied to revolutionize communication, security, chemistry, finance, fundamental physics and much more, but the question is now if and when the promised results will be delivered.
+%The era we are currently living in is often referred to as the NISQ era (Noisy Intermediate-Scale Quantum devices), where no \textit{real} advantage has yet been taken from quantum computing.
+%
+%To answer this problem, the research is focusing on near-term applications (compatible with noisy devices), on non-computing applications (such as quantum sensing researches) and on optimizing the hardware and the control of the qubits.\\
+%This thesis has some value for the last topic, since it adds tools for researches to control quantum devices.
+%
+%From the hardware point of view, there have been not many laboratories in the world with available qubits.
+%This is because a qubit, in particular for a superconducting device, requires special instruments to work (such as cryostats) and extremely expensive hardware for readout and control of the qubit themselves.\\
+%Despite the interest from manufacturers in commercializing expensive ready-to-run solutions, experimental laboratories still have to face the issue of acquiring instruments which are in continuous improvement in terms of firmware and software, therefore customers might even participate indirectly as co-developer by providing feedback, testing and waiting for improvements. This situation is not ideal because it increases the required manpower and time of a research team.\\
+%This, along with the costs of the machinery, is without doubt slowing researchers, that have to rely on external hardware (such as the quantum computers offered by the IBMQ-Experience) over which they have little control.
+%
+%However, recently, Radio Frequency System on Chip (RFSoC) FPGAs (Field Programmable Gate Arrays) were proposed as a low-cost hardware alternative which provides flexible development of firmware and software related to quantum technologies. 
+%Despite the complexity and required expertise for firmware development, the research community has already achieved open-firmware for quantum applications through the \Qick (Quantum Instrument Control Kit) project~\cite{Stefanazzi2022} under development at Fermilab National Laboratories.
+%
+%%In Italy, for the INFN QUB-IT project (see XX), FPGAs are stated as the to-go tool to reach full control over the qubits to be produced by the collaboration so \Qick is the natural and easiest way of managing them.
+%While it is an outstanding project, however, \Qick is currently under development and even if it exposes all the tools to control a qubit, it does not simplify it particularly.\\
+%A different, complementary, tool is under development at the Technology Innovation Institute (TII) of Abu Dhabi: \Qibolab.
+%\Qibolab is a software that should provide a common and easy interface for researchers, to control quantum devices with an agnostic philosophy in respect to the control instruments, possibly supporting them all.
+%It is also part of the \Qibo ecosystem, that gives a way of defining and simulating quantum algorithms from the circuit level.
+%
+%In order to write this thesis, I worked at TII laboratories with the objective of integrating the \Qick RFSoCs in \Qibolab through a new project called \Qibosoq project.
+%Leveraging the \Qick, I created an open-source software that offers full control over superconducting qubits, making it easy to control them both for experiments at the low-pulse-level and for higher-level applications.\\
+%The system was continuously tested in all the many characterization and calibration experiments that are required in order to make a qubit usable.
+%
+%The work done during the time at TII can be easily used by any laboratory that it is trying to implement the same qubit control solutions and has being presented to other researches through articles \cite{Efthymiou_2023}, YY.
+%Moreover, the software developed has already been used for applications in the quantum machine learning field \cite{Robbiati2023}.
+%
+%The developed system is also of great relevance for INFN quantum sensing project QUB-IT~\cite{qubit_project}.
+%The goal of the QUB-IT project is to realize an itinerant single-photon counter exploiting Quantum Non Demolition (QND) measurements and entangled qubits, in order to surpass current devices in terms of efficiency and low dark-count rates.
+%Such a detector has direct applications in Axion dark-matter experiments (such as QUAX~\cite{quax_project}), which require the photon to travel along a transmission line before being measured.\\
+%Among the outline of the project, the development of a full control system based on FPGAs is one of the critical in-itinere achievement and this thesis takes the first step in that direction.
+%
+%\vspace{1cm}
+%
+%In the first chapter of this thesis, I will provide the theoretical elements required to understand the importance of the search on the nature of Dark Matter, as well as all the needed elements of circuit QED to understand the functioning of a superconducting device such as a qubit.
+%
+%In the second chapter, I will talk about the experimental setup used for qubit control.
+%This includes actual hardware such as the RFSoCs and the cryostat, but also the software developed as an important tool of coding experiments and controlling the FPGA.
+%Moreover, a full in depth description of the peculiarity of a RFSoC system, in respect to the commercial alternatives will be provided.
+%
+%In the third chapter I will present, in detail, all the experiments required to characterize a qubit, so to find the parameters that describe it, and to calibrate its control.
+%This section is the largest part of the thesis and is written as a manual to help potential new researchers to approach the topic.
+%Indeed it does not yet exists, to my knowledge, a complete practical guide of this kind.\\
+%The following chapter extends the calibration to include experiments for two-qubit gates. This section is less detailed and would require more research to be completed.
+%
+%Finally, as the last chapter before the conclusions, I will present some possible applications of the developed setup. 
+%In particular, a fitting procedure done on qubits will be presented, with a real applied example, as well as a possible experiment to search for axion-like particles.
+
+
+
+

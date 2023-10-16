@@ -1,0 +1,172 @@
+\section{Experimental setup}
+
+In this section I will schematically present the experimental setup used for this thesis.
+Note however that, being this an experimental work, the setup changed various times and it is difficult to give a complete description of it, for all the states it had.
+
+The schematics presented here correspond to the final setup.
+
+\subsection{Cryostat}
+
+Since the qubits that we are considering are transmons, they work exploiting the superconductivity phenomenon.
+To reach the superconductivity regime, we need a device capable of refrigerating it to the mK region.
+The device employed for this task is called cryostat.
+
+In this thesis I used both the SD and XLD cryostats manufactured by Bluefors, but the majority of the data presented here was acquired with qubits in the XLD so I will focus on the description of those last setups.
+
+The technique used by cryostats to achieve these temperatures is the dilution refrigeration~\cite{McClintock2003, Craig2004}: a process that exploit a mixture of $^4\mathrm{He}$ and $^3\mathrm{He}$ to reach temperatures below the minimal one achievable through pressure process.
+The two isotopes are quite different: the former is a boson with spin $0$ that can be found in natural gas reservoirs, while the latter is a fermion (spin $1/2$) and is the byproduct of tritium fabrication in nuclear reactors.
+
+$\mathrm{^3He}$ can be diluted in $\mathrm{^4He}$ at any concentration, but when the mixture is cooled below $\sim 0.85$ K (note that pure liquid $\mathrm{^3He}$ can be cooled to a minimum of $0.3$ K) it undergoes a spontaneous phase separation.
+
+Two phases now coexist: a concentrated phase composed essentially only of $\mathrm{^3He}$ and a diluted phase that, on the contrary, is mostly composed of $\mathrm{^4He}$.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.6\textwidth]{Setup-software/figures/Helium_phase_diagram.svg.png}
+    \caption{Phase diagram for $\mathrm{He}$ as a function of $\mathrm{^3He}$ concentration.}
+    \label{fig:cryostat:heliumphasediagram}
+\end{figure}
+
+The graph in \cref{fig:cryostat:heliumphasediagram} shows equilibrium concentrations: intersections of the phase separation line and a horizontal isotherm line correspond to the concentrations of the two different phases (if below the $0.85$ mK threshold).
+
+In the coldest part of the cryostat, the mixing chamber, $\mathrm{^3He}$ atoms cross the interface between the concentrated and the diluted phase.
+This transition is endothermic and removes heat from the mixing chamber.
+When $\mathrm{^3He}$ dissolves in $\mathrm{^4He}$ at such low temperatures, it undergoes a process similar to evaporation in a vacuum and produces vapor.
+The diluted phase is connected to another chamber called still (short for distilling pot) that is held by a heater at $\sim0.7$ K and continuously pumped to remove the vapor which is mainly composed of $\mathrm{^3He}$ because of its greater vapor pressure.
+The depletion of $\mathrm{^3He}$ within the still produces an osmotic pressure that drives more $\mathrm{^3He}$ to the still from the mixing chamber where phase transition can continue to happen.
+$\mathrm{^3He}$ pumped from the still is reintroduced to the mixing chamber through a flow impedance that enables the helium to condense and that cools it down via heat exchangers that work making use of the cold $\mathrm{^3He}$ that is flowing upwards toward the still. This process is schematized in \cref{fig:cryostat:heliumdilutionrefrigerator}.
+
+In \cref{fig:xldcryostat} some picture of the XLD are present.
+Without any thermal load can reach $8$ mK, while with minimal thermal load (the qubits mounted but not probed) is stable at $9$ mK.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{Setup-software/figures/dilution_refrigerator.png}
+    \caption{Outline of the dilution process.}
+    \label{fig:cryostat:heliumdilutionrefrigerator}
+\end{figure}
+
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.55\textwidth]{Setup-software/figures/XLD.jpeg}
+    \caption{Bluefors XLD.}
+    \label{fig:xldcryostat}
+\end{figure}
+
+\input{Setup-software/fpga_rfsoc}
+
+
+\subsection{Qubits Configuration}
+
+At TII, the XLD cryostat was used at its full capacity and contained, at the mixing chamber level:
+\begin{itemize}
+    \item 3 single non-flux-tunable qubit manufactured by TII, in custom 3D cavities;
+    \item a 5 flux-tunable qubits chip, with a star connectivity (namely a single qubit in the middle that can couple to the other four);
+    \item a 5 flux-tunable qubits with couplers (namely flux-tunable qubits between other qubits, used to mediate the interaction between the two qubits);
+    \item  a 25 qubit chip with 5 readout lines and various qubits connected to each other.
+\end{itemize}
+
+In the work for this thesis, I tested and interacted, in particular, with the single qubit devices and one readout line of the 25 qubit chip.
+
+The single qubits, that were changed and replaced over my period at TII, generally share the same schematic and the reader can imagine them as presented in \cref{fig:single_qubit}.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=\textwidth]{Setup-software/figures/ex:transmon.png}
+    \caption[Example of a single qubit in a 3D cavity]{Example of a single qubit in a 3D cavity. Credits~\cite{Huang2020}.}
+    \label{fig:single_qubit}
+\end{figure}
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.8\textwidth]{Setup-software/figures/contralto.png}
+    \caption[Topology of the Contralto QuatWare chip]{Topology of the Contralto QuatWare chip. Credits~\cite{contralto}.}
+    \label{fig:contraltro_chip}
+\end{figure}
+The 25 qubits chip is schematically presented in \cref{fig:contraltro_chip}
+
+Among all the present qubits, the \ZCU was connected to line D.\\
+Note that every line has 5 qubits plus an isolated one (the yellows) that are qubit used only for testing.\\
+Moreover, all the black interconnecting lines are possible two-qubits gates.
+
+
+\subsection{Configuration and setup for RFSoC4x2}
+
+During this thesis work, the \RFSoC was connected to multiple single qubit in 3D cavities.
+Therefore, the setup changed several times, but it always had some stable attributes.
+For example, in a single qubit (transmon) non flux tunable, there is only a single line for input (were both readout and drive pulses are fired) and a single readout output (\textit{feedback}).
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=\textwidth]{Setup-software/figures/scheme_lines_single.pdf}
+    \caption{Schematics of the lines of a single non-flux-tunable qubit in a 3D cavity.}
+    \label{fig:lines_single}
+\end{figure}
+
+In \cref{fig:lines_single} the two lines (in-fridge) are presented.
+All the attenuation present in the IN line is needed to help to reach the single-photon level (or near-single-photon) and its spread to avoid excessive thermal load to a specific stage of the dilution.\\
+The filters represented at the mixing chamber level included both IR filter and low-pass filters to clean in the best possible way any noise.
+
+In the readout OUT line, the first element is TWPA~\cite{Yaakobi2013} manufactured by Silent Waves~\cite{silentwaves} continuously pumped (with another line not present in the scheme) during the experiments.
+The role of the TWPA is to amplify the signal, inducing a noise amplification quantum limited.
+Note that the TWPA was not present in the majority of the setups, but is inserted in the scheme for completeness.\\
+At the $4$ K level, a cryogenic HEMT~\cite{Baulieu2022} is present so that the signal, extremely low in the input, becomes measurable.
+
+At room temperature the \textit{feedback signal} is amplified with a LNA (Low Noise Amplifier) manufactured by MiniCircuit~\cite{minicircuit} (max $+8$ dB ) and sent to the \RFSoC ADC 0.\\
+The drive source is DAC 0 (B on the board) and sometimes an amplification of max $+8$ dB was needed.
+The readout IN was connected to DAC 1 (A on the board) and merged to the drive by using a passive \textit{splitter}.\\
+At room temperature, some band-pass filters were added to remove spurious created by the synthesis process and eventual high frequency noise.
+
+
+\subsection{Configuration and setup for ZCU111}
+
+Similarly as per single qubit control, in \cref{fig:lines_zcu} are showed the in-fridge lines for the control of the multiplexed qubits of the 25 qubits chip. 
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=\textwidth]{Setup-software/figures/scheme_lines_25.pdf}
+    \caption{Schematics of the lines of a single flux-tunable qubit in the 25 qubit chip.}
+    \label{fig:lines_zcu}
+\end{figure}
+
+Note first that there are multiple input lines and, in particular, that the readout in and the drive line are are separated.
+This is mainly because this is a 2D chip and not a cavity.\\
+In any case, both for the readoutIN and the drive the filters are the same already named in the single qubit setup.
+
+For the flux line, on the other hand, the filters are extremely low frequency filters since in theory we just need a DC current.
+
+The TWPA is one of the differing elements. In fact it was not used a standard fixed-band TWPA as per the single qubit setup, but a prototype of a variable-band TWPA~\cite{Ranadive2022}.
+This TWPA needs a pump to work and a DC current to tune the amplification band and gain. Both these lines are not showed in the scheme since they are more or less secondary.
+
+Some more differences are present at room temperature, where the setup is a bit more complex.
+In particular note that the schematics presented in \cref{fig:lines_zcu} represent a single qubit, but this is a system with 5+1 multiplexed qubits.
+Therefore, at room temperature we will have the DAC 6 of the \ZCU connected to the readoutIN while a mux firmware is loaded.
+This basically cause the bandwidth to go from $6$ GHz to few MHz, is therefore required a local oscillator with an up-conversion scheme as presented in \cref{fig:up-down-conversion}. 
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.7\textwidth]{Setup-software/figures/upconversion.pdf}
+    \caption{Scheme used for down and up-conversion.}
+    \label{fig:up-down-conversion}
+\end{figure}
+As it shown, the same local oscillator is also used for down-conversion.
+Since this process uses an IQ mixer, in the down-conversion I and Q are splitted and gets merged back again using a splitter connected to the board ADC 0.
+
+For the drive lines is sometimes needed additional amplification that was provided through a LNA.
+They were connected to DAC 3-4-5 to achieve full control of 3 qubits at the same time.
+
+For the flux lines some more work is needed since the outputs of the companion XM500 board (that exposes the SMA connections) have baluns (i.e. DC filters) on its single-ended connection.
+There are two option to proceed: it is possible to buy/project a new companion boards or to leverage the 3 differential outputs of the XM500.
+This second option was chosen for simplicity.
+Note that the differential outputs P-N can be merged together via a simple subtraction P-N, something that standard differential amplifiers easily do, but that since we are aiming for DC currents these are not an option because they use capacitors and operates as high-pass filters.
+Special active differential amplifiers are needed in this case.\\
+Having bought 3 of them, we were able to bias 3 flux-tunable qubits using DACs 0-1-2.
+
+\subsection{Configuration and setup for ZCU216}
+
+The \textbf{ZCU216} was used with the same setup composed for the \textbf{ZCU111}.
+This was a temporary solution that was also limiting the board potential.
+
+In particular, the \textbf{ZCU216} could potentially be used to fully control 7 flux tunable qubits (considering 7 drive lines, 7 flux lines and a maximum of 2 readout inputs), while with the used scheme only three qubits were usable.
+To fully unblock the board potential, however, it is needed to make some changes to the \Qick firmware and this requires particular work.
+

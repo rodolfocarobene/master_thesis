@@ -1,0 +1,67 @@
+
+\usepackage{amsmath}
+\usepackage{float}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{subfig}
+\usepackage{xspace}
+\usepackage{tcolorbox}
+\usepackage{physics}
+\usepackage{listings}
+\usepackage{utfsym}
+
+
+\usepackage[hidelinks]{hyperref}
+\hypersetup{
+    colorlinks=false
+}
+
+\usepackage[sorting=none, style=nature]{biblatex}
+\addbibresource{stuff/bibliography.bib}
+
+\usepackage{cleveref}
+
+
+
+
+
+\newcommand{\routine}[2]{\section{#1}\label{sec:#2} \input{characterization/#2}} 
+
+\newcommand{\experimentrecap}[4]{
+\begin{tcolorbox}[colback=blue!10!white, colframe=blue!50!white, title=Experiment recap: \textbf{#1}, coltitle=black]
+    \begin{description}
+        \item[Scope:]\hfill\break #2.
+        \item[Parameters to extract:]\hfill\break #3.
+        \item[Brief description:]\hfill\break #4.
+    \end{description}
+\end{tcolorbox}
+}
+
+\newcommand{\fluxexperimentrecap}[4]{
+\begin{tcolorbox}[colback=red!10!white, colframe=red!50!white, title=Experiment recap: \textbf{#1}, coltitle=black]
+    \begin{description}
+        \item[Scope:]\hfill\break #2.
+        \item[Parameters to extract:]\hfill\break #3.
+        \item[Brief description:]\hfill\break #4.
+    \end{description}
+\end{tcolorbox}
+}
+
+\newcommand{\RFSoC}{\textbf{RFSoC4x2}\xspace}
+\newcommand{\ZCU}{\textbf{ZCU111}\xspace}
+
+\newcommand{\Qibo}{\texttt{Qibo}\xspace}
+\newcommand{\Qibolab}{\texttt{Qibolab}\xspace}
+\newcommand{\Qibocal}{\texttt{Qibocal}\xspace}
+\newcommand{\Qibosoq}{\texttt{Qibosoq}\xspace}
+\newcommand{\Qick}{\texttt{Qick}\xspace}
+
+\newtheorem{theorem}{Theorem}
+
+\newcommand{\pd}[2]{\frac{\partial #1}{\partial #2}}
+\newcommand{\pipulse}{$\pi$-pulse\xspace}
+\newcommand{\pipulses}{$\pi$-pulses\xspace}
+\newcommand{\pihpulse}{$\pi/2$-pulse\xspace}
+\newcommand{\pihpulses}{$\pi/2$-pulses\xspace}
+
+

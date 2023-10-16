@@ -1,0 +1,66 @@
+
+\subsection{Control and readout}
+
+\subsubsection{Driving a qubit}
+
+Ignoring the resonator, we can consider the dynamic Hamiltonian of a driven qubit with:
+\begin{equation}
+    H_{\text{drive}} = -\frac{1}{2}\omega_q \sigma_z - E(t) \cdot \hat d 
+\end{equation}
+where we are considering a classical coherent signal with dipole interaction: $E(t)=E\cos(\omega_d t)$.
+If the dipoles are aligned we can simplify  the Hamiltonian as:
+\begin{equation}\label{eq:drive_hamiltonian}
+    H_{\text{drive}} = -\frac{1}{2}\omega_q \sigma_z - A\cos(\omega_d t) \sigma_x
+\end{equation}
+
+We can describe the interacting qubit dynamic considering a state:
+\begin{equation}
+    \ket{\psi(t)} = C_0 (t) e^{+i\frac{\omega_q}{2}}\ket 0 + C_1 (t) e^{-i\frac{\omega_q}{2}}\ket 1
+\end{equation}
+Solving the Schrodinger equation we obtain:
+\begin{align}
+    C_0(t) &= \frac{e^{-i\frac{\Delta_d}{2}t}}{\Omega_R}\left(  \Omega_R \cos\left( \frac{\Omega_R}{2}t \right) + i \Delta_d \sin \left( \frac{\Omega_R}{2}t \right) \right)\\
+    C_1(t) &= i \frac{Ae^{i\frac{\Delta_d}{2}t}}{\Omega_R}\sin \left( \frac{\Omega_R}{2}t \right)
+\end{align}
+where we defined $\Delta_d = \omega_q - \omega_d$, $A=Ed$ and $\Omega_R=\sqrt{A^2+\Delta^2_d}$.
+
+These equations describe the dynamic of a driven qubit.
+We can extract the solution in terms of probabilities:
+\begin{equation}\label{eq:probability_1}
+    P_1(t) = \abs{C_1(t)}^2= \frac{A^2}{A^2 + \Delta_d^2}\sin^2\left( \frac{\sqrt{A^2+\Delta_d^2}t}{2}t\right)
+\end{equation}
+
+\subsubsection{Measurements}
+
+To measure the state of a qubit, we will never probe it directly but rather use \cref{eq:readout_equation} to our advantage.
+
+The idea is that the effective resonance frequency of the resonator will be dependent on the state of the qubit as: $\omega = \omega_r - \chi \sigma_z$. 
+So it will be sufficient to measure this frequency to infer the qubit state.
+
+Note that the resonance frequency corresponds to the excitation energy.
+
+Considering the resonator at the ground state, we can identify two states: $0(G)$, corresponding to the qubit in state $\ket 0$, and $0(E)$ corresponding to the qubit in $\ket 1$. To these states, different transition energies (or frequency) will be available so we can write, defining $\gamma$ as a photon with the transition energy tuned to the excitation of the state in the underscript:
+\begin{align*}
+    \gamma_{0(G)} &+ 0(G) \rightarrow \ket 1(G) \\
+    \gamma_{0(G)} &+ 0(E) \rightarrow \gamma_{0(G)} + 0(E) 
+\end{align*}
+
+this difference is explained considering that, in the second case, the sent photon does not have the energy tuned to the transition.
+
+Consider first a circuit with a planar resonator. A planar resonator is a type of resonant structure designed on a single plane, typically on the surface of a printed circuit board (PCB) or a similar substrate.
+The readout line, often called transmission line, will be coupled to the resonator just by proximity.
+This means that, if we send a certain number of photons through the line and they are tuned to the transition frequency, they will get absorbed by the resonator that will get excited. We will therefore have "missing photons" at the end of the readout line.
+
+The situation is sightly different in the case of a 3D resonator, in which the readout line passes within. 3D resonators are resonant structures that extend into three dimensions, and they are not confined to a single plane. Usually, in quantum computing, the typical structure is a cavity resonator.
+Indeed , the phenomenon appears here in the opposite way, with an increase in the photon number for on resonance energies. This can be explained with the classic constructing interference effect seen in all kind of standing waves, as they are the ones in the 3D resonator.
+
+So this is the very simple idea behind superconducting qubit measurements.
+But what happens in case of superposition states?
+
+From the principles of quantum mechanics, we will have the wave-function collapsing in the measured state. This should not come as a surprise, but what it's interesting to note is the non-destructiveness of this protocol.
+The idea is that two consecutive measurements, should lead to the same exact result, because the measurement should not disturb the state of the qubit (note that the wavefunction collapse is not considered a disturb here).
+This property is desired and expected in ideal conditions, and it is also required in numerous error correction schemes however, in real hardware, it is often not completly achievable.
+
+
+
+

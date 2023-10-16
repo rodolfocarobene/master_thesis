@@ -1,0 +1,229 @@
+\documentclass{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[parfill]{parskip}
+
+\usepackage{graphicx}
+\usepackage{xspace}
+\usepackage{amsmath}
+\usepackage[a4paper, total={7.2in, 10.8in}]{geometry}
+
+
+\usepackage[style=verbose-inote,citestyle=authortitle]{biblatex}
+\addbibresource{stuff/bibliography.bib}
+\usepackage{xpatch}
+\xapptobibmacro{cite}{\setunit{\nametitledelim}\printfield{year}\nametitledelim\printfield{howpublished}}{}{}
+
+\newcommand{\Qibo}{\texttt{Qibo}\xspace}
+\newcommand{\Qibolab}{\texttt{Qibolab}\xspace}
+\newcommand{\Qibocal}{\texttt{Qibocal}\xspace}
+\newcommand{\Qibosoq}{\texttt{Qibosoq}\xspace}
+\newcommand{\Qick}{\texttt{Qick}\xspace}
+
+
+\begin{document}
+
+\textbf{Cognome e nome: } Carobene Rodolfo\\
+\textbf{Matricola: } 838092\\
+% Qubit characterization and calibration on a RFSoC-based control system
+\textbf{Titolo della prova finale: } Caratterizzazione e calibrazione di qubit tramite un sistema di controllo basato su RFSoC\\
+\textbf{Relatore: } Andrea Giachero\\
+\textbf{Correlatore: } Matteo Borghesi\\
+\textbf{Relatore esterno: } Stefano Carrazza\\
+\textbf{Correlatore esterno: } Javier Serrano\\
+\textbf{Data della seduta della prova finale: }23-25/10/2023\\
+\textbf{Corso di laurea di appartenenza: } Corso di Laurea magistrale in Fisica\\
+\textbf{Recapito telefonico: } 349-7680022\\
+
+\begin{center}
+    \textbf{RIASSUNTO}
+\end{center} 
+
+La computazione quantistica (\textit{quantum computing}) ha attirato un enorme interesse già dai primi anni dalla sua concezione, quando ancora non esistevano implementazioni fisiche di computer quantistici.
+La proposta e lo sviluppo di algoritmi (come quelli di Shor e Grover), a livello teorico più efficienti di quelli progettabili con computer classici, ha fatto sì che la ricerca in questo ambito abbia compiuto progressi notevoli nell'ultimo decennio.
+
+Queste prime scoperte hanno portato all'intensificarsi della ricerca e dello sviluppo, grazie anche al coinvolgimento in prima persona di aziende private, tra cui Google e IBM, che, in pochi anni, hanno investito in nuove tecnologie arrivando a costruire computer abbastanza efficienti da reclamare il raggiungimento di un \textit{Quantum Primacy}.
+%
+Sebbene tali sviluppi abbiano portato a risultati evidenti, gli attuali computer risultano ancora troppo poco precisi perché siano effettivamente utili.
+Siamo infatti in quella che viene definita la \textit{Noisy Intermediate Scaled Quantum} (NISQ) era dove i computer quantistici sono troppo rumorosi per sostenere algoritmi quantistici senza incorrere in errori.\\
+%
+Per questo motivo, dopo aver incentrato per anni gli studi sull'aumento del numero di qubit (l'unità di computazione corrispondente al bit classico), l'attuale ricerca si sta focalizzando sul progettare e costruire singoli qubit più affidabili ed efficienti.
+%
+Per raggiungere questo obiettivo, si lavora in contemporanea su più direzioni: si sperimentano diverse tipologie di qubit (superconduttivi, a ioni intrappolati etc.), si cerca di migliorare i delicatissimi processi di fabbricazione dei qubit stessi e si cerca di migliorare i metodi di controllo e operazione.\\
+%
+Il mio lavoro di tesi si inserisce nella ricerca riguardante l'ultimo punto: il \textit{Quantum Control}, in particolare per qubit superconduttivi.
+
+Un qubit superconduttivo è assimilabile a un circuito LC dove l'induttanza classica è sostituita con un'induttanza non lineare ottenuta tramite una giunzione Josephson.
+Tale giunzione sfrutta il fenomeno della superconduttività per ottenere una Hamiltoniana anarmonica, dove è possibile separare i primi due stati (quelli poi usati per la computazione) dagli altri.
+Il qubit è poi accoppiato a un risonatore classico, descritto da una Hamiltoniana armonica, che viene utilizzato per la lettura.
+%
+Tutte le frequenze di transizione di questo sistema, studiabile esattamente nell'ambito della cQED~\footcite{Blais2021} (\textit{circuit Quantum ElectroDynamics}), sono tipicamente nell'ordine del GHz.
+%
+Tramite l'invio di impulsi di tensione a queste frequenze, è possibile leggere lo stato del qubit e modificarlo a piacimento.
+%
+La sintesi degli impulsi necessari è tuttavia una sfida tecnologica in sé, dal momento che i tipici DAC (\textit{Digital to Analog Converter}) arrivano al massimo alle centinaia di MHz e rendono necessari schemi di \textit{up/down-conversion} che richiedono l'utilizzo di ulteriori strumenti, complicando il setup sperimentale e introducendo ulteriori fonti di rumore in un sistema molto sensibile a disturbi esterni.
+%
+Inoltre, è estremamente importante avere totale controllo sul profilo temporale dell'impulso (di durata a partire dai $20$ ns): tutti i parametri che descrivono gli impulsi, infatti, vengono calibrati con precisione per massimizzare il rendimento (\textit{relaxation time} $T_1$, \textit{dephasing time} $T_2$, \textit{accuracy}) del qubit stesso e minime variazioni possono facilmente andare a decimare i tempi di coerenza o a moltiplicare il \textit{leakage} al di fuori dello spazio computazionale.
+Ciò richiede l'utilizzo di strumenti particolari.
+
+Diverse aziende hanno sviluppato strumenti proprietari per la sintesi e la definizione di questi impulsi.
+Tali strumenti sono particolarmente costosi e i ricercatori sono sempre limitati, nella qualità dei segnali, dai tipici schemi di \textit{up/down-conversion}.
+Inoltre, ogni strumento viene controllato con un software e un linguaggio differente, cosa che complica l'integrazione in un unico framework di controllo e lettura.
+
+Una recente alternativa, più versatile ed economica, sono le schede RFSoC (\textit{Radio Frequency System on Chip}): un particolare tipo di FPGA (\textit{Field Programmable Gate Arrays}), composte da circuiti integrati programmabili e multifunzione, connessi su una singola scheda che incorpora anche diversi componenti RF ad alte performance.
+Esse hanno la peculiarità di permettere la sintesi di impulsi direttamente nell'ordine del GHz con grande precisione e totale controllo del sistema~\footcite{Kalfus2020}, tramite una tecnica chiamata \textit{Direct Digital Synthesis} (DDS).\\
+%
+Le schede RFSoC, sviluppate inizialmente nell'ambito delle comunicazioni, sono presto diventate interessanti anche per il quantum computing per le loro caratteristiche di sintesi e perché includono in un'unica scheda elettronica una CPU, diversi DAC e degli ADC altrettanto performanti.
+Dal 2020, inoltre, il progetto \Qick del Fermilab~\footcite{Stefanazzi2022} fornisce un firmware, disponibile \textit{open source}, mediante il quale è possibile programmare queste FPGA per il controllo e la lettura di qubit.
+
+Nel mio lavoro di tesi, ho utilizzato \Qick come base per sviluppare \Qibosoq, un software \textit{open source} progettato per il controllo e la lettura di qubit superconduttivi tramite schede RFSoC.
+%
+Inoltre, \Qibosoq integra le schede RFSoC nel framework di \Qibo, un software ad alto livello, che permette di definire algoritmi e circuiti quantistici da eseguire successivamente su hardware.
+
+Nel periodo di tesi, svolta al Technology Innovation Institute (TII) di Abu Dhabi, mi sono occupato di caratterizzazione e calibrazione di qubit, sfruttando \Qibosoq e diverse schede RFSoC per il controllo di qubit singoli a frequenza fissa (implementati fisicamente con una singola giunzione Josephson in una cavità 3D), e per il controllo contemporaneo di diversi qubit a frequenza variabile (realizzati con coppie di giunzioni accoppiate a risonatori planari).
+
+La caratterizzazione di un qubit è un processo che include diversi esperimenti volti a identificare tutti i principali parametri specifici del qubit stesso e della cavità risonante a cui è accoppiato per la lettura.
+%
+Questi parametri sono poi utilizzati insieme a quelli ricavati da ulteriori esperimenti, di calibrazione, per ottimizzare il controllo del qubit, in modo tale da renderlo utilizzabile in applicazioni di \textit{quantum computing} o \textit{quantum sensing}.
+%
+La catena degli esperimenti necessari è composta, come minimo, da circa quindici differenti esperimenti. 
+Ciascuno di questi include la sintesi di specifiche sequenze di impulsi e misurazioni che portano all'ottimizzazione di uno o più dei parametri che descrivono il sistema.\\
+Ad esempio, l'esperimento di Ramsey, che permette di identificare il valore di $T_2$ (la costante di decadimento che descrive la perdita di coerenza del sistema qubit), viene eseguito tramite la sintesi di due impulsi successivi che portano il qubit da uno stato definito (0-1) a uno stato di sovrapposizione e viceversa, tramite l'applicazione di un'operazione descritta da $\frac{1}{\sqrt{2}}\begin{pmatrix}1 & 1 \\ i & i \end{pmatrix}$. I due impulsi vengono distanziati tramite un ritardo variabile e al secondo impulso viene aggiunta una fase relativa di $\pi/2$. 
+%
+Questo procedimento permette di verificare, in funzione del ritardo fra i due impulsi, il decadimento tipico del \textit{dephasing} che avviene a seguire del primo impulso.
+Gli impulsi devono essere sintetizzati alla frequenza caratteristica del qubit e anche piccole deviazioni appaiono, in questo esperimento, come precessioni oscillatorie. Per questo motivo è possibile anche utilizzare questo procedimento per identificare con precisione la frequenza di transizione del qubit.
+
+Questo esempio illustra bene come un singolo esperimento possa risultare complesso da realizzare dal punto di vista sperimentale. 
+In questo senso, un sistema basato su schede RFSoC come quello sviluppato per questa tesi, che non necessita di altri strumenti al di fuori della scheda stessa, può diventare di grande impatto per semplificare le operazioni di caratterizzazione e calibrazione.
+Bisogna inoltre ricordare che, una volta sviluppato un sistema di controllo di qubit, questo può essere utilizzato per un'ampia gamma di esperimenti e non solo per quanto riguarda la calibrazione/caratterizzazione.
+
+Il lavoro al TII è sempre stato rivolto al \textit{quantum computing}, nel senso dello sfruttamento dei qubit per l'esecuzione di algoritmi quantistici.
+In questo ambito, il sistema sviluppato è già stato utilizzato per l'esecuzione di algoritmi di \textit{quantum machine learning} volti a eseguire su qubit stime di PDF (\textit{Parton Distribution Functions})~\footcite{Robbiati2023}.\\
+%
+Nonostante ciò, in futuro esso diventerà uno strumento importante anche per applicazioni nell'ambito del \textit{quantum sensing}, dunque per sfruttare i qubit come rivelatori di particelle.
+
+In particolare, l'INFN (Istituto Nazione di Fisica Nucleare) ha presentato nel 2021 il progetto Qub-IT che si propone di utilizzare qubit per la ricerca di materia oscura, specificatamente per fotoni oscuri (\textit{dark photons}) e assioni~\footcite{qubit_project}.
+L'idea di fondo di Qub-IT è quella di accoppiare un qubit a una cavità che, in risonanza con eventuali particelle di materia oscura, potrebbe provocare la conversione delle particelle stesse in fotoni. 
+I vari fotoni presenti nella cavità vanno a influenzare il qubit a cui è accoppiata, rendendo possibile misurare con alta precisione il numero di fotoni presenti, tramite una particolare sequenza di impulsi non troppo dissimile da quella necessaria per l'esperimento di Ramsey precedentemente illustrato.\\
+%
+Nel documento di proposta del progetto, uno dei punti fondamentali è lo sviluppo di un sistema di controllo e lettura di qubit tramite FPGA che sia preciso, affidabile e scalabile.
+Il lavoro della mia tesi è un passo importante in questa direzione.
+
+
+Nella tesi, vengono forniti i necessari elementi teorici di cQED per comprendere come avviene il controllo di qubit superconduttivi.\\
+Viene illustrato il setup sperimentale e la configurazione hardware necessaria per le diverse schede RFSoC utilizzate, assieme a una dettagliata spiegazione delle caratteristiche peculiari delle schede RFSoC, ossia i metodi di sintesi e acquisizione sfruttati per lavorare direttamente nei GHz.
+Anche \Qibosoq e \Qibolab, i software sviluppati e utilizzati durante il lavoro di tesi, vengono brevemente esposti e commentati.\\
+Il nucleo della tesi è composto da una spiegazione dettagliata dei principali esperimenti necessari per la caratterizzazione e calibrazione di qubit singoli e \textit{two-qubit gates}.
+Ogni esperimento è completo di grafici da ottenere in condizioni ideali, di alcuni grafici reali e di soluzioni per alcuni dei problemi sperimentali più comuni. 
+Tutto ciò perché questa sezione possa eventualmente essere utilizzata come manuale pratico di calibrazione e caratterizzazione di qubit superconduttivi.\\
+%
+La tesi si conclude infine con due esempi di possibili applicazioni del sistema di controllo e lettura sviluppato: il primo di \textit{quantum machine learning} (già testato su hardware), il secondo di \textit{quantum sensing}, relativo all'esperimento per la ricerca di materia oscura.
+
+
+\textbf{Name and surname: } Rodolfo Carobene\\
+\textbf{Student ID: } 838092\\
+% Qubit characterization and calibration on a RFSoC-based control system
+\textbf{Title of the thesis: } Qubit characterization and calibration on a RFSoC-based control system\\
+\textbf{Supervisor: } Andrea Giachero\\
+\textbf{Co-supervisor: } Matteo Borghesi\\
+\textbf{External supervisor: } Stefano Carrazza\\
+\textbf{External co-supervisor: } Javier Serrano\\
+\textbf{Date of the final exam: }23-25/10/2023\\
+\textbf{Degree course: } Corso di Laurea magistrale in Fisica\\
+\textbf{Telephone number: } 349-7680022\\
+
+\begin{center}
+    \textbf{SUMMARY}
+\end{center} 
+
+Quantum computing has attracted significant interest from its early beginnings, even when there were no physical implementations of quantum computers yet.
+The proposal and development of algorithms (such as those by Shor and Grover), that are theoretically more efficient than what can be designed with classical computers, have led to significant progress in this field over the last decade.
+
+
+These early discoveries have led to an intensification of research and development, aided by the active involvement of private companies, such as Google and IBM, which, within a few years, have invested in new technologies and built computers efficient enough to claim the achievement of a "Quantum Primacy".
+%
+Although these advancements have yielded noticeable results, current computers are still not precise enough to be practically useful.
+Indeed, we are in what is referred to as the "Noisy Intermediate-Scale Quantum" (NISQ) era, where quantum computers exist, but are too noisy to support quantum algorithms without encountering errors.\\
+%
+For this reason, after years of research focusing on increasing the number of qubits (the quantum computing equivalent of classical bits), current research is shifting its focus toward designing and building more reliable and efficient individual qubits.
+%
+In order to achieve this goal, research is working simultaneously in multiple directions: experimenting with various types of qubits (superconducting, trapped ions, etc.), trying to enhance the highly delicate qubit fabrication processes, and improving the methods for qubit control and operation.\\
+%
+My thesis work is part of the research concerning the last point: Quantum Control, specifically for superconducting qubits.
+
+A superconducting qubit can be represented as a LC circuit where the classical inductance is replaced by a non-linear inductance obtained with a Josephson junction.
+This junction exploit the phenomenon of superconductivity to create a non-harmonic Hamiltonian, allowing the separation of the first two states (those used for computation) from the others.
+The qubit is then coupled to a classical resonator, described by a harmonic Hamiltonian, which is used for readout.
+%
+All transition frequencies of this system, which can be precisely studied within the framework of cQED (circuit Quantum ElectroDynamics)~\footcite{Blais2021}, are typically on the order of GHz.
+%
+By applying voltage pulses at these frequencies, it is possible to read the state of the qubit and modify it as desired.
+%
+However, synthesizing the required pulses is itself a technological challenge, as typical Digital to Analog Converters (DACs) reach at most hundreds of MHz, requiring up/down-conversion schemes that necessitate the use of additional equipment.
+This complicates the experimental setup and introduce additional sources of noise into a system that is highly sensitive to external disturbances.
+%
+All parameters describing the pulses are precisely calibrated to maximize the qubit's performance (relaxation time $T_1$, dephasing time $T_2$, accuracy), and even minor variations can significantly affect coherence times or lead to leakage outside the computational space.
+This requires the use of specialized instruments.
+
+Several companies have developed proprietary tools for the synthesis and definition of these pulses.
+However, these tools are often expensive, and researchers are frequently constrained in signal quality due to typical up/down-conversion schemes.
+Additionally, each instrument is controlled using different software and programming languages, which complicates integration into a unified control and readout framework.
+
+A recent, more versatile, and cost-effective alternative is the use of RFSoC boards (Radio Frequency System on Chip).
+These boards are a specific type of FPGA (Field Programmable Gate Arrays) composed of programmable integrated circuits, all connected on a single board, which also incorporates several high-performance RF components.
+The most notable feature of RFSoC boards is their ability to synthesize GHz pulses with great precision and full control~\footcite{Kalfus2020}, achieved through a technique known as Direct Digital Synthesis (DDS).\\
+%
+RFSoC boards, initially developed for communications purposes, have quickly become appealing also for quantum computing due to their synthesis capabilities and the inclusion of a single electronic board that houses a CPU, multiple high-performance DACs, and ADCs.
+Additionally, since 2020, the Fermilab's \Qick project~\footcite{Stefanazzi2022} has provided open-source firmware, enabling the programming of these FPGAs for qubit control and readout purposes.
+
+In my thesis work, I utilized \Qick as a foundation to develop \Qibosoq, an open-source software designed for the control and readout of superconducting qubits using RFSoC boards.
+Additionally, \Qibosoq integrates RFSoC boards into the \Qibo framework, a high-level software platform that allows for the definition of quantum algorithms and circuits to be executed on hardware later on.
+
+During my thesis period at the Technology Innovation Institute (TII) in Abu Dhabi, I focused on the characterization and calibration of qubits, by using \Qibosoq in conjunction with various RFSoC boards for the control of single fixed-frequency qubits (physically implemented with a single Josephson junction in a 3D cavity) and for the simultaneous control of multiple variable-frequency qubits (constructed with pairs of Josephson junctions coupled to planar resonators).
+
+%
+The characterization of qubits is a process that involves various experiments aimed at identifying all the key parameters specific to the qubit itself and to the resonant cavity to which it is coupled for readout.
+These parameters are then used along with those obtained from additional calibration experiments to optimize the control of the qubit, making it suitable for applications in quantum computing or quantum sensing.
+The sequence of the experiments required is typically composed of at least fifteen different experiments.
+Each of these experiments involves the synthesis of specific pulse sequences and measurements aimed at optimizing one or more of the parameters that describe the system.\\
+%
+For example, the Ramsey experiment, which allows the identification of the value of \(T_2\) (the decay constant describing the loss of coherence of the qubit system), is performed by synthesizing two consecutive pulses that take the qubit from a defined state (0-1) to a superposition and vice versa, using an operation described by \(\frac{1}{\sqrt{2}}\begin{pmatrix}1 & 1 \\ i & i \end{pmatrix}\).
+The two pulses are separated by a variable delay, and a relative phase of \(\pi/2\) is added to the second pulse.
+%
+This process enables the examine, as a function of the delay between the two pulses, the typical dephasing decay that occurs following the first pulse.
+The pulses must be synthesized at the characteristic frequency of the qubit, and even small deviations can manifest as oscillatory precessions in the qubit state.
+For this reason, this procedure can also be used to precisely identify the qubit's transition frequency.
+
+%Questo esempio illustra bene come un singolo esperimento possa risultare complesso da realizzare dal punto di vista sperimentale. 
+%
+This example effectively illustrates how a single experiment can be quite complex to implement from an experimental perspective.
+In this regard, a system based on RFSoC boards, such as the one developed for this thesis, which does not require additional instruments beyond the board itself, can have a significant impact in simplifying the characterization and calibration operations.\\
+Furthermore, it's important to note that once a qubit control system is developed, it can be used for a wide range of experiments beyond just calibration and characterization.
+
+%
+The work at TII has always been focused on quantum computing, meaning the use of qubits for the execution of quantum algorithms.
+In this context, the developed system has already been used to run quantum machine learning algorithms aimed at estimating Parton Distribution Functions (PDFs) on qubits~\footcite{Robbiati2023}.
+%
+However, in the future, it will also become an important tool for applications in quantum sensing, using qubits as particle detectors.
+
+%
+In particular, in 2021 the italian INFN (\textit{Istituto Nazione di Fisica Nucleare}) presented the Qub-IT project, which aims to use qubits for the search for dark matter, specifically for dark photons and axions~\footcite{qubit_project}.
+The fundamental idea behind Qub-IT is to couple a qubit to a cavity that, in resonance with potential dark matter particles, could induce the conversion of these particles into photons.
+The various photons present in the cavity influence the coupled qubit, making it possible to measure the number of photons with high precision through a specific pulse sequence not too dissimilar from the one required in the previously mentioned Ramsey experiment.
+%
+In the project proposal document, one of the key points is the development of a qubit control and readout system using FPGAs that is precise, reliable, and scalable.
+%
+The work of my thesis represents an important step in this direction.
+
+%
+The thesis provides the theoretical elements of cQED necessary to understand how the control of superconducting qubits works.
+It illustrates the experimental setup and hardware configuration required for the various RFSoC boards used, along with a detailed explanation of the unique features of RFSoC boards, including the synthesis and acquisition methods used to work directly in the GHz range. 
+Additionally, the software \Qibosoq and \Qibolab, developed and used during the thesis work, are briefly introduced and commented upon.\\
+%
+The core of the thesis consists of a detailed explanation of the main experiments required for the characterization and calibration of single qubits and two-qubit gates.
+Each experiment includes graphs to be obtained under ideal conditions, some real-world graphs, and solutions to some of the most common experimental problems.
+This section is designed to potentially serve as a practical manual for the calibration and characterization of superconducting qubits.\\
+%
+Finally, the thesis concludes with two examples of possible applications of the developed control and readout system: the first in quantum machine learning (already tested on hardware), and the second in quantum sensing, related to the experiment for the search for dark matter.
+
+\end{document}
